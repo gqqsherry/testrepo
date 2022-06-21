@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DemoExample>
+  <!--
+  Name是在CDK中用于显示的工具链名称，建议具备一定可读性
+  -->
+  <Name>爱普特开发板APT32F110x示例程序</Name>
+  <!--
+  ID是工具组件的唯一标识符，不对外显示，全网唯一
+  -->
+  <ID>APT32F110x_SDK</ID>
+  <!--
+  Vendor是提供该第三方工具的厂商名
+  -->
+  <Vendor>APTCHIP(爱普特)</Vendor>
+  <!--
+  URL一般是一个web可访问的网站，用于宣传使用
+  -->
+  <URL>http://aptchip.com/</URL>
+  <!--
+  Description用于在CDK中显示对该工具的简单说明
+  -->
+  <Description>基于APT32F110X开发板的工程示例</Description>
+  <!--
+  Version节点用于描述每个具体的资源，可以存在多个Value值不同的Version用来描述该资源的多个版本
+  -->
+  <Version Value="V1.0.3">
+    <!--
+    ResourceType支持的类型有 tar.gz / zip / git 
+    -->
+    <ResourceType>git</ResourceType>
+    <!--
+    ResourceURL是获取该资源的地址，外网可访问
+    -->
+    <ResourceURL>https://github.com/APT-AEteam/APT32F110x.git</ResourceURL>
+    <!--
+    ResourceValidation用于验证ResourceURL的安全性和有效性；
+    如果是tar.gz / zip 类型，这里需要提供MD5值；
+      Windows下面计算文件MD5值，可以直接在Windows CMD命令行中输入：
+      certutil -hashfile D:\your\file\fullpath\filename.tar.gz MD5
+    如果是git仓库，这里需要提供commit的hash值
+    -->
+    <ResourceValidation>6ea0422dc8705ec7645f644a98ad25879f78fff6</ResourceValidation>
+    <!--
+    1 EnvPath用来设置环境变量，在DemoExample.xml文件中不需要该节点
+    -->
+    <EnvPath></EnvPath>
+    <!--
+     可选节点，<ResourceType></ResourceType>非git时，该节点有效
+     对于一些32位的工具，在64位系统上，工具的路径长度会有MAX_PATH（260）的限制
+     为了尽可能的缩短路径，对于存在顶层目录的结构，该节点作用就是
+     指定的顶层目录名，CDK在安装时，会默认把指定的顶层目录名给删除，直接使用底部的目录放在插件根目录中；
+     因此，<EnvPath></EnvPath>指定的路径应该不再包含该顶层目录了；
+    -->
+    <OmitTopFolder></OmitTopFolder>
+    <!--
+    CDK使用DemoExample包创建工程的原理是将SDK zip包解压以后，指定的文件拷贝到需要创建的工程根路径下；
+    1 一个SDK zip包可以包含一个或者多个CDK工程，并且这些工程可以复用源代码文件；
+    2 这里包含两个主体部分来描述工程的资源：
+      2.1 <Projects>节点用来描述当前资源包中包含的工程；
+      2.2 <Components>节点用来描述创建工程时需要拷贝的一些资源，因为有些资源是工程复用的，所以<Components>节点可以被Project节点复用
+    -->
+    <Components>
+      <Component ID="CODE_APT32F110">
+        <Folder Name="board"/>
+        <Folder Name="components"/>
+      </Component>
+    </Components>
+    <!--
+    ProjectTree节点描述了一个树结构，在CDK中以树结构展示，根节点是<T-Head>/<Name></Name>节点；
+    然后就是ProjectTree节点描述的树
+    -->
+    <Projects>
+      <!--
+      每个独立的Project节点描述一个工程
+      -->
+      <Project Name="apt32f110x_demo">
+        <Path>demo/demo.cdkproj</Path>
+        <CopyFolder>demo</CopyFolder>
+        <RequiredComponent>CODE_APT32F110</RequiredComponent>
+      </Project>
+    
+    </Projects>
+  </Version>
+</DemoExample>
